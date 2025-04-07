@@ -33,9 +33,29 @@ mqttClient.on('connect', () => {
   });
 });
 
-mqttClient.on('message', (topic, message) => {
-  console.log(`Received message on ${topic}: ${message.toString()}`);
-  // Here, you'll process the message (e.g., update logs)
+mqttClient.on('message', async (topic, message) => {
+       console.log(`Received message on topic: ${topic}`);
+       console.log(`Message content: ${message.toString()}`);
+
+       // Extract door_id and status
+       const doorId = topic.split('/')[1];
+       const status = message.toString();
+       const timestamp = new Date().toISOString();
+
+        console.log(`Door ID: ${doorId}, Status: ${status}, Timestamp: ${timestamp}`);
+
+       try {
+               // Insert into the database
+               const result = await pool.query(
+                                   'INSERT INTO door_status (door_id, status, timestamp) VALUES ($1, $2, $3)',
+                                   [doorId, status, timestamp]
+                               );
+               console.log('Status logged to database:', result);
+       } catch (err) {
+                     console.error('Error inserting status into database:', err);
+       }
+
+
 });
 
 app.use(express.json());
