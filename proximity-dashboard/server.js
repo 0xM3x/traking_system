@@ -52,6 +52,32 @@ app.get('/test-db', async (req, res) => {
     }
 });
 
+// Register a new device (person unit or door unit)
+app.post('/register-device', async (req, res) => {
+    const { name, deviceType, distanceThreshold } = req.body;
+    const timestamp = new Date().toISOString();
+    
+    // Insert the device into the database
+    try {
+        await pool.query('INSERT INTO devices (name, device_type, distance_threshold, created_at) VALUES ($1, $2, $3, $4)', 
+        [name, deviceType, distanceThreshold, timestamp]);
+        res.status(200).send('Device registered successfully');
+    } catch (err) {
+        console.error('Error registering device:', err);
+        res.status(500).send('Error registering device');
+    }
+});
+
+// Get logs of status changes
+app.get('/get-logs', async (req, res) => {
+    try {
+        const logs = await pool.query('SELECT * FROM door_status ORDER BY timestamp DESC');
+        res.json(logs.rows);
+    } catch (err) {
+        console.error('Error retrieving logs:', err);
+        res.status(500).send('Error retrieving logs');
+    }
+});
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
