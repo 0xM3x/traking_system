@@ -3,6 +3,7 @@ const { Client } = require('pg');
 const mqtt = require('mqtt');
 const config = require('./config/config');
 const doorRoutes = require('./routes/doorRoutes');
+const pool = require('./config/db');
 
 const app = express();
 const port = 3000;
@@ -39,6 +40,18 @@ mqttClient.on('message', (topic, message) => {
 
 app.use(express.json());
 app.use('/api/doors', doorRoutes(dbClient, mqttClient)); // Add routes here
+
+// test database connection 
+app.get('/test-db', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT NOW()');
+        res.send(result.rows[0]);
+    } catch (error) {
+        console.error('Database error:', error);
+        res.status(500).send('Error connecting to the database');
+    }
+});
+
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
