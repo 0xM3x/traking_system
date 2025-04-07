@@ -57,19 +57,42 @@
 
     <div id="door-container">
         <!-- Door status will be dynamically injected here -->
-        <div class="door-status" id="door-1">
-            <p>Door 1</p>
-            <p class="status green">Door is open</p>
-            <p class="timestamp">Last updated: 2025-04-07 10:30</p>
-        </div>
-
-        <div class="door-status" id="door-2">
-            <p>Door 2</p>
-            <p class="status red">Person is close</p>
-            <p class="timestamp">Last updated: 2025-04-07 10:35</p>
-        </div>
     </div>
 
+    <script>
+        // Fetch door status data every 1 seconds
+        setInterval(fetchDoorStatus, 1000);
+
+        async function fetchDoorStatus() {
+            try {
+                const response = await fetch('/api/door-status');
+                const data = await response.json();
+                updateDoorStatus(data);
+            } catch (error) {
+                console.error('Error fetching door status:', error);
+            }
+        }
+
+        function updateDoorStatus(data) {
+            const doorContainer = document.getElementById('door-container');
+            doorContainer.innerHTML = ''; // Clear existing content
+
+            // Loop through each door status and display it
+            data.forEach((door) => {
+                const doorElement = document.createElement('div');
+                doorElement.classList.add('door-status');
+                doorElement.innerHTML = `
+                    <p>Door ${door.door_id}</p>
+                    <p class="status ${door.status === 'Person is close' ? 'red' : 'green'}">${door.status}</p>
+                    <p class="timestamp">Last updated: ${door.timestamp}</p>
+                `;
+                doorContainer.appendChild(doorElement);
+            });
+        }
+
+        // Fetch door status immediately when the page loads
+        fetchDoorStatus();
+    </script>
 </body>
 </html>
 

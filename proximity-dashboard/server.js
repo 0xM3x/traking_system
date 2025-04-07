@@ -103,6 +103,18 @@ app.get('/get-logs', async (req, res) => {
     }
 });
 
+// Endpoint to get door status
+app.get('/api/door-status', async (req, res) => {
+    try {
+        // Query the latest door status from the database
+        const result = await pool.query('SELECT * FROM door_status ORDER BY timestamp DESC LIMIT 5');
+        res.json(result.rows);  // Send the latest 5 door status records
+    } catch (err) {
+        console.error('Error fetching door status:', err);
+        res.status(500).send('Error fetching door status');
+    }
+});
+
 // Catch all route to serve the dashboard page
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
