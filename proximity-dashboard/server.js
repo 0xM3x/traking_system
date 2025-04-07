@@ -7,6 +7,7 @@ const pool = require('./config/db');
 
 const app = express();
 const port = 3000;
+const path = require('path');
 
 // Initialize PostgreSQL client
 const dbClient = new Client({
@@ -61,6 +62,9 @@ mqttClient.on('message', async (topic, message) => {
 app.use(express.json());
 app.use('/api/doors', doorRoutes(dbClient, mqttClient)); // Add routes here
 
+// Serve static files like HTML, CSS, and JavaScript
+app.use(express.static(path.join(__dirname, 'public')));
+
 // test database connection 
 app.get('/test-db', async (req, res) => {
     try {
@@ -97,6 +101,11 @@ app.get('/get-logs', async (req, res) => {
         console.error('Error retrieving logs:', err);
         res.status(500).send('Error retrieving logs');
     }
+});
+
+// Catch all route to serve the dashboard page
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(port, () => {

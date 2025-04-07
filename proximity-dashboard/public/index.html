@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proximity Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .door-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+        }
+
+        .door-status p {
+            margin: 0;
+        }
+
+        .status {
+            font-weight: bold;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        .green {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .red {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .timestamp {
+            font-size: 0.9em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <h1>Proximity Dashboard</h1>
+
+    <div id="door-container">
+        <!-- Door status will be dynamically injected here -->
+        <div class="door-status" id="door-1">
+            <p>Door 1</p>
+            <p class="status green">Door is open</p>
+            <p class="timestamp">Last updated: 2025-04-07 10:30</p>
+        </div>
+
+        <div class="door-status" id="door-2">
+            <p>Door 2</p>
+            <p class="status red">Person is close</p>
+            <p class="timestamp">Last updated: 2025-04-07 10:35</p>
+        </div>
+    </div>
+
+</body>
+</html>
+
